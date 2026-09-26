@@ -10,7 +10,7 @@ void array_delete(int*& arr) {
 }
 int* array_resize(int* arr, std::size_t size, std::size_t new_size) {
     int* new_arr = new int[size]{};
-    for (int i = 0; i < new_size; ++i) {
+    for (std::size_t i = 0; i < new_size; ++i) {
         new_arr[i] = arr[i];
     }
     delete[] arr;
@@ -20,7 +20,7 @@ int* array_resize(int* arr, std::size_t size, std::size_t new_size) {
 int* array_insert(int* arr, std::size_t& size, std::size_t pos, int value) {
     size++;
     int* new_arr = new int[size]{};
-    int i = 0;
+    std::size_t i = 0;
     for (; i < pos; ++i) {
         new_arr[i] = arr[i];
     }
@@ -35,7 +35,7 @@ int* array_insert(int* arr, std::size_t& size, std::size_t pos, int value) {
 }
 int* array_remove(int* arr, std::size_t& size, std::size_t pos) {
     int* new_arr = new int[size-1]{};
-    for (int i = 0, new_i = 0; i < size; i++, new_i++) {
+    for (std::size_t i = 0, new_i = 0; i < size; i++, new_i++) {
         if (i == pos) {
             i++;
         }
@@ -46,11 +46,11 @@ int* array_remove(int* arr, std::size_t& size, std::size_t pos) {
     return new_arr;
 }
 void array_print(int* arr, std::size_t size) {
-    for (int i = 0; i < size; ++i) { std::cout << arr[i] << " "; }
+    for (std::size_t i = 0; i < size; ++i) { std::cout << arr[i] << " "; }
     std::cout << "\n";
 }
 void array_gnome_sort(int* arr, std::size_t size) {
-    int i = 0;
+    std::size_t i = 0;
     while (i < size) {
         if (i == 0) { i++; }
         if (arr[i] < arr[i-1]) {
@@ -63,9 +63,9 @@ void array_gnome_sort(int* arr, std::size_t size) {
 }
 
 bool array_binary_search(const int* arr, std::size_t size, int target, std::size_t& out_index) {
-    int lo = 0;
-    int hi = size;
-    int index = size / 2;
+    std::size_t lo = 0;
+    std::size_t hi = size;
+    std::size_t index = size / 2;
     while ((hi - lo) > 1)
     {
         index = lo + (hi - lo) / 2;
