@@ -43,6 +43,7 @@ int* array_remove(int* arr, std::size_t& size, std::size_t pos) {
     }
     delete[] arr;
     arr = nullptr;
+    size--;
     return new_arr;
 }
 void array_print(int* arr, std::size_t size) {

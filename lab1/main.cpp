@@ -1,5 +1,5 @@
 #include <iostream>
-#include "array_ops.h"
+#include "include/array_ops.h"
 
 bool is_arr_sorted(int* arr, std::size_t size) {
     for (std::size_t i = 0; i < (size - 1); ++i) {
@@ -12,9 +12,16 @@ bool is_arr_sorted(int* arr, std::size_t size) {
 
 void dialogue_cycle() {
     bool running = true;
-    int inp{};
+    int inp{}, value{};
     std::size_t size{};
+    std::size_t pos{};
+    std::size_t size_{};
+    int answer{};
     int* arr = nullptr;
+    int target{};
+    int test{};
+    std::size_t out_idx{};
+    bool res{};
     while (running) {
         std::cout << "Введите 1 из 9 опций:\n";
         std::cout << "0 - выход из меню\n";
@@ -22,8 +29,8 @@ void dialogue_cycle() {
         std::cout << "2 - напечатать массив\n";
         std::cout << "3 - вставить элемент в массив\n";
         std::cout << "4 - удалить элемент из массива\n";
-        std::cout << "5 - Изменить размер массива\n";
-        std::cout << "6 - вывести конкретный элемент массива\n";
+        std::cout << "5 - изменить размер массива\n";
+        std::cout << "6 - удалить массив\n";
         std::cout << "7 - гномья сортировка массива\n";
         std::cout << "8 - двоичный поиск по массиву\n";
         std::cin >> inp;
@@ -32,19 +39,19 @@ void dialogue_cycle() {
             case 0:
                 std::cout << "работа завершена, спасибо, что выбираете нас\n";
                 running = false;
+                array_delete(arr);
                 break;
             
             case 1:
                 std::cout << "введите размер массива:\n";
                 std::cin >> size;
-                if (size < 0) {
+                if (size <= 0) {
                     std::cout << "некорректный размер массива\n";
                     size = 0;
                     break;
                 }
                 if (arr != nullptr) {
                     std::cout << "у вас уже есть готовый массив, вы хотите удаить его и создать новый? (0/1)\n";
-                    int answer{};
                     std::cin >> answer;
                     if (answer) {
                         array_delete(arr);
@@ -68,18 +75,20 @@ void dialogue_cycle() {
                 break;
             
             case 3:
-                if (arr == nullptr) { std::cout << "для того, чтобы вставить элемент в массив создайте массив\n"; break;}
-                std::size_t pos{};
-                int value{};
-                
+                if (arr == nullptr) { std::cout << "для того, чтобы вставить элемент в массив создайте массив\n"; break;} 
                 std::cout << "введите число для вставки в массив:\n";
                 std::cin >> value;
+                std::cout << "введите индекс элемента:\n";
+                std::cin >> pos;
+                if ((pos < 0) || (pos >= size)) {
+                    std::cout << "некорректный индекс\n";
+                    break;
+                }
                 arr = array_insert(arr, size, pos, value);
                 break;
             
             case 4:
                 if (arr == nullptr) { std::cout << "для того, чтобы удалить элемент массива сначала создайте массив\n"; break;}
-                std::size_t pos{};
                 std::cout << "введите индекс элемента:\n";
                 std::cin >> pos;
                 if ((pos < 0) || (pos >= size)) {
@@ -91,12 +100,10 @@ void dialogue_cycle() {
             
             case 5:
                 if (arr == nullptr) { std::cout << "для того, чтобы изменть размер массива сначала создайте его\n"; break;}
-                std::size_t size_{};
                 std::cout << "введите новый размер:\n";
                 std::cin >> size_;
                 if (size > size_) {
                     std::cout << "новый размер массива меньше исходного, вы уверены, что ввели всё правильно? (0/1)\n";
-                    int test{};
                     std::cin >> test;
                     if (test) { break; }
                 }
@@ -105,7 +112,6 @@ void dialogue_cycle() {
             
             case 6:
                 if (arr == nullptr) { std::cout << "для того, чтобы вывести элемент массива сначала создайте массив\n"; break;}
-                std::size_t pos{};
                 std::cout << "введите индекс элемента:\n";
                 std::cin >> pos;
                 if ((pos < 0) || (pos >= size)) {
@@ -122,18 +128,15 @@ void dialogue_cycle() {
             case 8:
                 if (arr == nullptr) { std::cout << "для того, чтобы использовать двоичный поиск надо созвдть массив\n"; break;}
                 if (!is_arr_sorted(arr, size)) { std::cout << "массив не является отсортированным, двоичный поиск может (и скорее всего будет) работать некорректно\n"; }
-                std::size_t pos{};
                 std::cout << "введите индекс элемента:\n";
                 std::cin >> pos;
                 if ((pos < 0) || (pos >= size)) {
                     std::cout << "некорректный индекс\n";
                     break;
                 }
-                int target{};
-                std::size_t out_idx{};
                 std::cout << "введите искомый элемент:\n";
                 std::cin >> target;
-                bool res = array_binary_search(arr, size, target, out_idx);
+                res = array_binary_search(arr, size, target, out_idx);
                 if (res) {
                     std::cout << "элемент успешно найден на позиции "  << out_idx << "\n";
                 } else {
