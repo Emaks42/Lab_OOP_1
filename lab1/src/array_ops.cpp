@@ -1,6 +1,9 @@
 #include <iostream>
 
 int* array_create(std::size_t size) {
+    if (size == 0) {
+        return nullptr;
+    }
     int* arr = new int[size]{};
     return arr;
 }
@@ -9,8 +12,14 @@ void array_delete(int*& arr) {
     arr = nullptr;
 }
 int* array_resize(int* arr, std::size_t size, std::size_t new_size) {
-    int* new_arr = new int[size]{};
-    for (std::size_t i = 0; i < new_size; ++i) {
+    if (new_size == 0) {
+        delete[] arr;
+        arr = nullptr;
+        return nullptr;
+    }
+    int* new_arr = new int[new_size]{};
+    std::size_t size_ = new_size * (new_size < size) + size * (new_size >= size);
+    for (std::size_t i = 0; i < size_; ++i) {
         new_arr[i] = arr[i];
     }
     delete[] arr;
@@ -25,9 +34,8 @@ int* array_insert(int* arr, std::size_t& size, std::size_t pos, int value) {
         new_arr[i] = arr[i];
     }
     new_arr[i] = value;
-    i++;
     for (; i < size; ++i) {
-        new_arr[i] = arr[i];
+        new_arr[i+1] = arr[i];
     }
     delete[] arr;
     arr = nullptr;
@@ -51,6 +59,7 @@ void array_print(int* arr, std::size_t size) {
     std::cout << "\n";
 }
 void array_gnome_sort(int* arr, std::size_t size) {
+    if (size < 2) { return; }
     std::size_t i = 0;
     while (i < size) {
         if (i == 0) { i++; }
@@ -59,6 +68,8 @@ void array_gnome_sort(int* arr, std::size_t size) {
             arr[i] = arr[i-1];
             arr[i-1] = sav;
             i--;
+        } else {
+            i++;
         }
     }
 }
@@ -70,7 +81,7 @@ bool array_binary_search(const int* arr, std::size_t size, int target, std::size
     while ((hi - lo) > 1)
     {
         index = lo + (hi - lo) / 2;
-        if (arr[index] < target) {
+        if (arr[index] > target) {
             hi = index;
         } else {
             lo = index;
@@ -78,6 +89,10 @@ bool array_binary_search(const int* arr, std::size_t size, int target, std::size
     }
     out_index = lo;
     if (arr[lo] == target) {
+        return true;
+    }
+    out_index = hi;
+    if (arr[hi] == target) {
         return true;
     }
     return false;
